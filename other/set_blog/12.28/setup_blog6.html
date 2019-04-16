@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2017-12-28</span>设计模式(二)————————proxy模式学习笔记</h4>
+		<h3>结构</h3>
+		<p>&nbsp;&nbsp;&nbsp;代理模式是指代替别人进行工作，以便于通过代理对象就可以访问到目标对象的方法。他的好处就在于可以在代理类中拓展目标对象的功能。</p>
+		<p><img src="img/simple.png" alt="图片2" width="700" /></p>
+		<p>
+		Printable类:目标对象和代理对象共同执行的接口。<br>
+		Printer类:目标对象类,表示的是带名字的打印机类(本人)。同时实现Printable接口。<br>
+		PrinterProxy类:代理对象类,实现Printable接口，并依赖Printer类，最后调用本人的方法。<br>
+		</p>
+		<p>代理模式的关键点就在于，目标对象和代理对象都实现对象的接口，同时，目标对象是代理对象的拓展，目标函数需要代理函数进行实现。</p>
+		<h2>静态代理</h2>
+		<h3>Printable类</h3>
+		<p>public interface Printable {<br>
+			&nbsp;&nbsp;public abstract void setPrinterName(String name);//设置名字<br>
+			&nbsp;&nbsp;public abstract String getPrinterName();//获取名字<br>
+			&nbsp;&nbsp;public abstract void print(String string);//显示文字（打印）<br>
+		}<br>
+		</p>
+		<h3>Printer类</h3>
+		<p>public class Printer implements Printable{<br>
+			&nbsp;&nbsp;private String name;<br>
+			&nbsp;&nbsp;public Printer() {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;heavyJob("正在生成Printer的实例");<br>
+			&nbsp;&nbsp;}<br>
+			
+			public Printer(String name) {<br>
+				&nbsp;&nbsp;this.name = name;<br>
+				&nbsp;&nbsp;heavyJob("正在生成Printer的实例("+name+")");<br>
+			}<br>
+			
+			public void print(String string) {<br>
+				&nbsp;&nbsp;System.out.println("=== "+name + "=== ");<br>
+				&nbsp;&nbsp;System.out.println(string);<br>
+			}<br>
+			
+			private void heavyJob(String msg) {<br>
+				&nbsp;&nbsp;System.out.println(msg);<br>
+				&nbsp;&nbsp;for(int i=0;i<5;i++) {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	try {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	Thread.sleep(1000);<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	} catch (InterruptedException e) {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		e.printStackTrace();<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	}<br>
+				&nbsp;&nbsp;	System.out.print(".");<br>
+				&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;System.out.println("结束.");<br>
+			}<br>
+
+			@Override<br>
+			public void setPrinterName(String name) {<br>
+				
+			&nbsp;&nbsp;	this.name = name;<br>
+			}<br>
+
+			@Override<br>
+			public String getPrinterName() {<br>
+				
+			&nbsp;&nbsp;	return name;<br>
+			}<br>
+		}<br></p>
+		<h3>PrinterProxy类</h3>
+		<p>public class PrinterProxy implements Printable{<br>
+			&nbsp;&nbsp;private String name;//名字<br>
+			&nbsp;&nbsp;private Printer real;//本人<br>
+			
+			&nbsp;&nbsp;public PrinterProxy() {<br>
+				
+			&nbsp;&nbsp;}<br>
+			
+			&nbsp;&nbsp;public PrinterProxy(String name) {<br>
+			&nbsp;&nbsp;	this.name = name;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public synchronized void setPrinterName(String name) {<br>
+				
+			&nbsp;&nbsp;	if(real != null) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;		real.setPrinterName(name);//设置本人名字<br>
+			&nbsp;&nbsp;	}
+			&nbsp;&nbsp;	this.name = name;<br>
+			&nbsp;&nbsp;}<br>
+
+			@Override<br>
+			public  String getPrinterName() {<br>
+				
+			&nbsp;&nbsp;	return name;<br>
+			&nbsp;&nbsp;}<br>
+
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public void print(String string) {<br>
+				
+			&nbsp;&nbsp;	realize();<br>
+			&nbsp;&nbsp;	real.print(string);//具体调用了，本人的打印方法<br>
+			&nbsp;&nbsp;}<br>
+			
+			&nbsp;&nbsp;private synchronized void realize() {<br>
+			&nbsp;&nbsp;	if(real == null) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;		real = new Printer(name);<br>
+			&nbsp;&nbsp;	}<br>
+			&nbsp;&nbsp;}<br>
+		&nbsp;&nbsp;}<br></p>
+		<h3>Main类</h3>
+		<p>public class Main {<br>
+			&nbsp;&nbsp;public static void main(String[] args) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	Printable p = new PrinterProxy("dongyv");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	System.out.println("现在打印的是："+p.getPrinterName());<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	p.setPrinterName("xia");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	System.out.println("现在打印的是："+p.getPrinterName());<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	p.print("xiadongyv");<br>
+			&nbsp;&nbsp;}<br>
+		}<br></p>
+		<h3>输出结果</h3>
+		<p><img src="img/end.png" alt="图片2" ></img></p>
+		<p>上面静态代理的例子中，代理类是自己定义好的，在程序运行之前就已经编译完成。如果出现问题，那么就需要维护俩套内容。动态代理，则可以解决上述问题</p>
+		<h2>动态代理</h2>
+		<p>动态代理对象的生成,是利用JDK的API,动态的在内存中构建代理对象。动态代理的优势在于可以很方便的对代理类的函数进行统一的处理，而不用修改每个代理类中的方法。</p>
+		<h3>JDK中动态代理的api</h3>
+		<p>java.lang.reflect.Proxy 包中的 static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces,InvocationHandler h ) <br>
+		ClassLoader loader,:指定当前目标对象使用类加载器<br>
+		Class<?>[] interfaces,:目标对象实现的接口的类型<br>
+		InvocationHandler h:事件处理,执行目标对象的方法时,会触发事件处理器的方法,会把当前执行目标对象的方法作为参数传入<br></p>
+		<p>动态代理原理:<a href="https://www.cnblogs.com/gonjan-blog/p/6685611.html">https://www.cnblogs.com/gonjan-blog/p/6685611.html</a></p>
+		<h3>代码实现:ProxyFactory类(动态代理类工厂)</h3><a href="https://www.cnblogs.com/cenyu/p/6289209.html">https://www.cnblogs.com/cenyu/p/6289209.html</a>
+		<p>
+		public class ProxyFactory{//创建动态代理对象动态代理不需要实现接口,但是需要指定接口类型<br>
+			//维护一个目标对象<br>
+			&nbsp;&nbsp;private Object target;<br>
+			&nbsp;&nbsp;public ProxyFactory(Object target){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	this.target=target;<br>
+			&nbsp;&nbsp;}<br>
+
+		   //给目标对象生成代理对象<br>
+			&nbsp;&nbsp;public Object getProxyInstance(){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	return Proxy.newProxyInstance(
+						target.getClass().getClassLoader(),
+						target.getClass().getInterfaces(),
+						new InvocationHandler() {<br>
+			&nbsp;&nbsp;				@Override<br>
+			&nbsp;&nbsp;				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					System.out.println("开始事务2");<br>
+								//执行目标对象方法，反射<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					Object returnValue = method.invoke(target, args);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					System.out.println("提交事务2");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;					return returnValue;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;				}<br>
+			&nbsp;&nbsp;			});<br>
+			&nbsp;&nbsp;}<br>
+		}<br>
+		</p>
+		<h3>Main类</h3>
+		<p> public static void main(String[] args) {<br>
+	        // 目标对象<br>
+	        &nbsp;&nbsp;Printable target = new Printer();<br>
+	        // 【原始的类型 class cn.itcast.b_dynamic.UserDao】<br>
+	        &nbsp;&nbsp;System.out.println(target.getClass());<br>
+
+	        // 给目标对象，创建代理对象<br>
+	        &nbsp;&nbsp;Printable proxy = (Printable) new ProxyFactory(target).getProxyInstance();<br>
+	        // class $Proxy0   内存中动态生成的代理对象<br>
+	        &nbsp;&nbsp;System.out.println(proxy.getClass());<br>
+
+	        // 执行方法   【代理对象】<br>
+	        &nbsp;&nbsp;proxy.print("dongyu");<br>
+	    &nbsp;&nbsp;}<br></p>
+		<h3>输出结果</h3>
+		<p><img src="img/end1.png" alt="图片3" ></img></p>
+		<p>代理对象不需要实现接口,但是目标对象一定要实现接口,否则不能用动态代理。对应这个子类的实现方法，还有一个代理的方式叫做:Cglib代理。这里也不做阐述(持续学习中)。继续努力，加油。</p>
+    <div class="keybq">
+	<p><span>关键字词</span>：设计模式、proxy、代理</p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>

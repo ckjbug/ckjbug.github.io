@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2018-1-9</span>设计模式(五)————————Observer模式学习笔记</h4>
+		<h2>结构</h2>
+		<p>&nbsp;&nbsp;&nbsp;观察者模式中，一个目标物件管理所有相依于它的观察者物件，并且在它本身的状态改变时主动发出通知。<br>
+		同时，也会在观察者对象发生变化时，主动的通知观察者。以下示例类图:</p>
+		<p><img src="img/simple.png" alt="图片2" width="700" /></p>
+		
+		<h2>代码实现</h2>
+		<h3>Observer类(观察接口类)</h3>
+		<p>
+		这个是观察者的接口，具体的观察者都会实现这个接口。同时，参数代表的是被观察者的对象。<br><br>
+		public interface Observer {<br>
+		&nbsp;&nbsp;	public abstract void update(NumberGenerator generator);<br>
+		}<br>
+		</p>
+		<h3>NumberGenerator类(被观察者类)</h3>
+		<p>
+		也是一个抽象类的方法，主要是为了之后能够拓展更多的被观察者，每个观察者和被观察者是多对一的关系。<br>此类中通过ArrayList实现了这个依赖。<br><br>
+		public abstract class NumberGenerator {<br>
+		&nbsp;&nbsp;	private ArrayList observers = new ArrayList<>();//保存的Observer们<br>
+		&nbsp;&nbsp;	public void addObserver(Observer observer){//注册Observer<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		observers.add(observer);<br>
+		&nbsp;&nbsp;	}<br>
+		&nbsp;&nbsp;	public void deleteObserver(Observer observer){//删除Observer<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		observers.remove(observer);<br>
+		&nbsp;&nbsp;	}<br>
+		&nbsp;&nbsp;	public void notifyObservers(){//向Observer发送通知<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Iterator it = observers.iterator();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		while(it.hasNext()){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Observer o = (Observer)it.next();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			o.update(this);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;	}<br>
+			
+		&nbsp;&nbsp;	public abstract int getNumber();//获取数值<br>
+		&nbsp;&nbsp;	public abstract void execute();//生成数值<br>
+			
+		}<br>
+		</p>
+		<h3>RandomNumberGenerator类(被观察者实现类)</h3>
+		<p>
+		实现的是生成一个随机数，主要是在execute中实现通知观察者类这个操作。<br><br>
+		public class RandomNumberGenerator extends NumberGenerator{<br>
+		&nbsp;&nbsp;	private Random random = new Random();//随机生成器<br>
+		&nbsp;&nbsp;	private int number;//当前数值<br>
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public int getNumber() {//获得当前数值<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return number;<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public void execute() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		for(int i=0;i<(20);i++){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			number = random.nextInt(50);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			notifyObservers();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;	}<br>
+
+		}<br>
+		</p>
+		<h3>DigitObserver(观察者类的实现)</h3>
+		<p>
+		接受到通知后输出随机数。<br><br>
+		public class DigitObserver implements Observer{<br>
+		&nbsp;&nbsp;	public void update(NumberGenerator generator){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("DigitObserver:"+generator.getNumber());<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		try{<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Thread.sleep(100);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}catch (InterruptedException e) {<br>
+					
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;	}<br>
+		}<br>
+
+		</p>
+		<h3>GraphObserver(观察者类的实现)</h3>
+		<p>
+		接受到通知后通过随机数输出。<br>
+		public class GraphObserver implements Observer{<br><br>
+	
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public void update(NumberGenerator generator) {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.print("GraphObserver:");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		int count = generator.getNumber();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		for(int i=0;i<(count);i++){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			System.out.print("*");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		try{<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Thread.sleep(100);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}catch (InterruptedException e) {<br>
+					
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;	}<br>
+
+		}<br>
+		</p>
+		<h3>Main类(测试)</h3>
+		<p>
+		被观察者手动的发送通知给观察者<br><br>
+		public class Main {<br>
+		&nbsp;&nbsp;	public static void main(String[] args){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		NumberGenerator generator = new RandomNumberGenerator();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Observer observer1 = new DigitObserver();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Observer observer2 = new GraphObserver();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		generator.addObserver(observer1);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		generator.addObserver(observer2);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		generator.execute();<br>
+		&nbsp;&nbsp;	}<br>
+		}<br>
+		</p>
+		<h3>运行结果</h3>
+		<p><img src="img/observer.png" alt="图片3" width="700" /></p>
+		<p>上述示例中的观察者和被观察者都是通过抽象类的方式设计，为了方便拓展以后新的观察者和被观察者，有利于扩展。<br>
+		在实际应用中，此模式更多用于实现订阅功能的场景，例如微信好友的订阅(观察者)，当我们订阅了某个人(被观察者)的微信账号，当这个人发布了新的消息，我们就可以查看他的信息。首先是通过绑定新的好友到观察者集合中，最后在发送信息的时候让那些好友收到消息。<br></p>
+    <div class="keybq">
+	<p><span>关键字词</span>：设计模式、Observer、观察者、被观察者</p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>

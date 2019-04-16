@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2018-1-9</span>设计模式(六)————————Visitor模式学习笔记</h4>
+		<h2>结构</h2>
+		<p>&nbsp;&nbsp;&nbsp;访问者模式表示一个作用于某对象结构中的各元素的操作。它使你可以在不改变各元素类的前提下定义作用于这些元素的新操作。以下示例类图:</p>
+		<p><img src="img/simple1.png" alt="图片2" width="700" /></p>
+		<p>主要用的是组合模式的访问代码，但是略作修改，结果不变(相当于整合了组合模式)。对数据结构中的元素进行处理的任务被分离，交给visitor类负责。实现了数据结构与处理的分离。</p>
+		<h2>代码实现</h2>
+		<h3>Element类(数据结构者)</h3>
+		<p>
+		public interface Element {<br>
+		&nbsp;&nbsp;	public abstract void accept(Visitor v);//接受访问者<br>
+		}<br>
+		</p>
+		<h3>Entry类(结构实现)</h3>
+		<p>
+		跟组合模式的代码差不多就是多了实现Element方法，用于子类都能够添加具体的接受类。<br><br>
+		public abstract class Entry implements Element{<br>
+		&nbsp;&nbsp;	public abstract String getName();//获得名字<br>
+		&nbsp;&nbsp;	public abstract int getSize();//获得大小<br>
+		&nbsp;&nbsp;	public Entry add(Entry entry);//加入目录条目<br>
+			
+		&nbsp;&nbsp;	public String toString(){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return getName() +"("+getSize()+")";<br>
+		&nbsp;&nbsp;	}<br>
+		}<br>
+		</p>
+		<h3>Visitor类(访问者)</h3>
+		<p>
+		内置访问文件夹和访问文件的自定义方法。<br><br>
+		public abstract class Visitor {<br>
+		&nbsp;&nbsp;	public abstract void visit(File file);//访问文件<br>
+		&nbsp;&nbsp;	public abstract void visit(Directory directory);//访问文件夹<br>
+		}<br>
+		</p>
+		<h3>ListVisitor类(访问实现类)</h3>
+		<p>
+		访问者在访问文件夹和文件的时候，对应有不一样的输出方式。依赖于Entry类，如果访问被相信，那么就会调用自身的访问方法。<br><br>
+		public class ListVisitor extends Visitor{<br>
+		&nbsp;&nbsp;	private String currentdir = "";//当前访问的文件夹的名字<br>
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public void visit(File file) {//在访问文件时调用<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println(currentdir +"/"+ file);<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public void visit(Directory directory) {//在访问文件夹时调用<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println(currentdir +"/"+ directory);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		String savedir = currentdir;<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		currentdir = currentdir +"/"+ directory.getName();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Iterator it = directory.iterator();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		while(it.hasNext()){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Entry entry = (Entry)it.next();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			entry.accept(this);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		currentdir = savedir;<br>
+		&nbsp;&nbsp;	}<br>
+
+		}<br>
+		</p>
+		<h3>Directory类(访问文件夹类)</h3>
+		<p>
+		依赖于Visitor类，如果相信访问者那么就会接受访问者的所有信息，允许访问当前的文件夹。<br><br>
+		public class Directory extends Entry{<br>
+		&nbsp;&nbsp;	private String name;//文件夹名字<br>
+		&nbsp;&nbsp;	private ArrayList directory =new ArrayList<>();//文件夹中目录条目的集合<br>
+			
+		&nbsp;&nbsp;	public Directory(String name){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		this.name = name;<br>
+		&nbsp;&nbsp;	}<br>
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public String getName() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return name;<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public int getSize() {//获取大小 通过迭代器<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		int size = 0;<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Iterator it = directory.iterator();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		while(it.hasNext()){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Entry entry = (Entry)it.next();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			size += entry.getSize();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return size;<br>
+		&nbsp;&nbsp;	}<br>
+			
+		&nbsp;&nbsp;	public Entry add(Entry entry){//增加目录条目<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		directory.add(entry);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return this;<br>
+		&nbsp;&nbsp;	}<br>
+			
+		&nbsp;&nbsp;	public Iterator iterator(){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return directory.iterator();<br>
+		&nbsp;&nbsp;	}<br>
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public void accept(Visitor v) {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		v.visit(this);//观察当前的文件夹<br>
+		&nbsp;&nbsp;	}<br>
+
+		}<br>
+		</p>
+		<h3>File类(访问文件类)</h3>
+		<p>
+		依赖于Visitor类，如果相信访问者那么就会接受访问者的所有信息，允许访问当前的文件。<br><br>
+		public class File extends Entry{<br>
+		&nbsp;&nbsp;	private String name;<br>
+		&nbsp;&nbsp;	private int size;<br>
+		&nbsp;&nbsp;	public File(String name,int size){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		this.name = name;<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		this.size = size;<br>
+		&nbsp;&nbsp;	}<br>
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public String getName() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return name;<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public int getSize() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return size;<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public void accept(Visitor v) {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		v.visit(this);<br>
+		&nbsp;&nbsp;	}<br>
+
+		}</p>
+		<h3>Main类(测试)</h3>
+		<p>
+		public class Main {<br>
+		&nbsp;&nbsp;	public static void main(String[] args){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("目录创建中 ...");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory rootdir = new Directory("root");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory bindir = new Directory("bin");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory tmpdir = new Directory("tmp");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory userdir = new Directory("user");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.add(bindir);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.add(tmpdir);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.add(userdir);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		bindir.add(new File("vi",10000));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		bindir.add(new File("latex",20000));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.accept(new ListVisitor());//相信当前观察者<br>
+				
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("目录文件创建中 ...");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory yuki = new Directory("yuki");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory banako = new Directory("banako");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory tomura = new Directory("tomura");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		userdir.add(yuki);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		userdir.add(banako);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		userdir.add(tomura);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		yuki.add(new File("diary.html",100));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		yuki.add(new File("Composite.java",200));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		banako.add(new File("memo.text",300));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		tomura.add(new File("game.doc",400));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		tomura.add(new File("junk.mail",500));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.accept(new ListVisitor());//相信当前观察者<br>
+		&nbsp;&nbsp;	}<br>
+		}<br>
+		</p>
+		<h3>运行结果</h3>
+		<p><img src="img/visitor1.png" alt="图片3" width="700" /></p>
+		<p><img src="img/visitor2.png" alt="图片4" width="700" /></p>
+		<p>&nbsp;&nbsp;访问者模式最后是通过accept方法进行输出的。个人理解为，文件夹先允许访问者访问，进入文件夹中，访问者通过自己的浏览方式进行浏览当前的文件夹。(因为是当前的文件夹，所以在参数方面就是this，来指代当前)。最后的实现逻辑，就在访问者的实现类中了。</p>
+		<h2>模式优缺点</h2>		
+		<h3>优点:</h3>
+		<p>1、符合单一职责原则：凡是适用访问者模式的场景中，元素类中需要封装在访问者中的操作必定是与元素类本身关系不大且是易变的操作，使用访问者模式一方面符合单一职责原则，另一方面，因为被封装的操作通常来说都是易变的，所以当发生变化时，就可以在不改变元素类本身的前提下，实现对变化部分的扩展。<br>
+		2、扩展性良好：元素类可以通过接受不同的访问者来实现对不同操作的扩展。<br>
+		符合"开闭原则":对拓展(添加访问者的子类)是开放的，对修改(修改具体的访问流程)是关闭的。</p>
+		<h3>缺点:</h3>
+		<p>难以添加结构类的实现方式，比如在Element中在设计一个子类Device,那么就需要在访问类中添加这个访问的接口方法。(public abstract void Device(Device device);)同时，还要在所有的子类中都要实现这个接口。</p>
+		<h2>适应情况</h2>
+		<p>1、一个对象结构包含很多类对象，它们有不同的接口，而我们想对这些对象实施一些依赖于其具体类的操作。<br>
+		2、需要对一个对象结构中的对象进行很多不同的并且不相关的操作，而你想避免让这些操作“污染”这些对象的类。Visitor模式使得你可以将相关的操作集中起来 定义在一个类中。<br>
+		3、当该对象结构被很多应用共享时，用Visitor模式让每个应用仅包含需要用到的操作。<br>
+		4、定义对象结构的类很少改变，但经常需要在此结构上定义新的操作。改变对象结构类需要重定义对所有访问者的接口，这可能需要很大的代价。如果对象结构类经常改变，那么可能还是在这些类中定义这些操作较好。</p>
+    <div class="keybq">
+	<p><span>关键字词</span>：设计模式、Visitor、访问者</p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>

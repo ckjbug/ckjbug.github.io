@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2017-12-18</span>List相关</h4>
+		<h1>List——————————ArraryList源码窥探</h1>
+		<p>先看接口定义:public interface List<E> extends Collection<E>。继承Collection（也称为序列），此接口的用户可以对列表中每个元素的插入位置进行精确地控制。用户可以根据元素的整数索引（在列表中的位置）访问元素，并搜索列表中的元素。子类则是: ArrayList, LinkedList, Vector。(只列举了三个子类)</p>
+		<h2>ArraryList</h2>
+		<h3>属性</h3>
+		<p>private static final int DEFAULT_CAPACITY = 10;//默认初始容量<br>
+	private static final Object[] EMPTY_ELEMENTDATA = {};//共享的数组<br>
+	private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};//共享空数组实例，用于默认大小的空实例。我们区分这个和EMPTY_ELEMENTDATA，以知道在什么时候膨胀多少第一个元素被添加。<br>
+	transient Object[] elementData; //数组缓冲区。注:transient 表示不可序列化<br>
+		private int size;//数组中的元素个数<br></p>
+		<h3>构造器</h3>
+		<p>arraryList是一个可变数据，它有三个构造函数:<br> (1)public ArrayList();构造一个初始容量为10的空列表。<br>
+		(2)public ArrayList(int initialCapacity); 构造一个具有指定初始容量的空列表。<br>
+		(3)public ArrayList(Collection<? extends E> c);构造一个包含指定的元素列表收集。<br>
+		<h3>方法</h3>
+		<p>(1)add()——ArraryList数组扩容<br>
+		 ensureCapacityInternal(size + 1)将扩容的长度传入ensureCapacityInternal方法，其实调用ensureExplicitCapacity(minCapacity);方法，操作判断完成后最后是通过grow()方法进行数组的扩容的。<br>
+		private void grow(int minCapacity) {<br>
+			int oldCapacity = elementData.length;//原始容量<br>
+			int newCapacity = oldCapacity + (oldCapacity >> 1);//扩充一倍容量<br>
+				if (newCapacity - minCapacity < 0)//如果新容量还不够存放<br>
+					newCapacity = minCapacity;//设置长度为需要的长度<br>
+				if (newCapacity - MAX_ARRAY_SIZE > 0)<br>
+					newCapacity = hugeCapacity(minCapacity);<br>
+				elementData = Arrays.copyOf(elementData, newCapacity);//最后更新成为新的缓存区<br>
+		}<br>
+		(2)trimToSize():应用程序可以使用此操作来最小化存储ArrayList的实例。<br>
+			 public void trimToSize() {<br>
+					modCount++;<br>
+					if (size < elementData.length) {<br>
+						elementData = (size == 0)? EMPTY_ELEMENTDATA: Arrays.copyOf(elementData, size);//数组长度设置为元素大小(缩容)<br>
+					}<br>
+				}<br>
+		(3)indexOf():返回指定元素在这个列表中第一次出现的索引，存在返回i，不存在返回-1<br>
+			 public int indexOf(Object o) {<br>
+					if (o == null) {<br>
+						for (int i = 0; i < size; i++)<br>
+							if (elementData[i]==null)<br>
+								return i;<br>
+					} else {<br>
+						for (int i = 0; i < size; i++)<br>
+							if (o.equals(elementData[i]))<br>
+								return i;<br>
+					}<br>
+					return -1;<br>
+				}<br>
+			(4)contains():如果此列表中包含指定的元素，则返回true。主要是通过indexOf进行元素的判断<br>
+				public boolean contains(Object o) {<br>
+					return indexOf(o) >= 0;<br>
+				}<br>
+			(5)clone():返回当前数组的副本<br>
+				public Object clone() {<br>
+					try {<br>
+						ArrayList<?> v = (ArrayList<?>) super.clone();<br>
+						v.elementData = Arrays.copyOf(elementData, size);<br>
+						v.modCount = 0;<br>
+						return v;<br>
+					} catch (CloneNotSupportedException e) {<br>
+						// this shouldn't happen, since we are Cloneable<br>
+						throw new InternalError(e);<br>
+					}<br>
+				}<br>
+			(6)toArray():复制指定的数组，用null(如果需要的话)截取或填充。所以复制的长度是指定的。对于所有的指数在原始数组和复制中都有效，两个数组将包含相同的值。<br>
+			public Object[] toArray() {<br>
+			   return Arrays.copyOf(elementData, size);<br>
+			 }<br>
+			(7)get():获取index值来查找对应的元素<br>
+			public E get(int index) {<br>
+				rangeCheck(index);//判断数组下标是否越界<br>
+				return elementData(index);<br>
+			}<br>
+			(8)set():在指定的下标中的元素转换为指定元素，返回之前的值<br>
+				public E set(int index, E element) {<br>
+					rangeCheck(index);<br>
+					E oldValue = elementData(index);<br>
+					elementData[index] = element;<br>
+					return oldValue;<br>
+				}<br>
+			(9)remove():删除列表中指定位置的元素。将后面的元素移到指定位置的左边一位，返回被移除的值。<br>
+			public E remove(int index) {<br>
+					rangeCheck(index);//判断是否数组越界<br>
+					modCount++;<br>
+					E oldValue = elementData(index);<br>
+					int numMoved = size - index - 1;//获得数组index后面的元素个数<br>
+					if (numMoved > 0)<br>
+				   System.arraycopy(elementData, index+1, elementData, index,numMoved); // 将elementData数组index+1位置开始拷贝到elementData从index开始的空间  <br>
+					elementData[--size] = null; //移除最后一位<br>
+				   return oldValue;<br>
+			 }<br>
+		</p>
+		<br></p>
+		<h3>内部类</h3>
+		<p>Itr:实现了Intertor<E>接口，实现对应的next，remove,hasNext方法。<br>
+		ListItr则继承了Ttr同时，实现了ListInterator<E>接口，提供了向前遍历的方法(previous)。</p>
+		<p>看完源码后发现，其实源码并不可怕。多点耐心不懂了看看资料，还是可以攻克的，主要还是需要坚持，加油。</p>
+	<h3>感谢:</h3>
+	<p><a href="http://tool.oschina.net/apidocs/apidoc?api=jdk-zh" target="_blank">http://tool.oschina.net/apidocs/apidoc?api=jdk-zh</a><br>
+	<a href="https://www.cnblogs.com/ITtangtang/p/3948555.html" target="_blank">https://www.cnblogs.com/ITtangtang/p/3948555.html</a><br>
+	</p>
+	</ul>
+   
+    <div class="keybq">
+	<p><span>关键字词</span>：ArraryList,源码,分析</p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>

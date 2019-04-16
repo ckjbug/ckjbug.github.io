@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2018-1-3</span>设计模式(三)————————Decorator模式学习笔记</h4>
+		<h2>结构</h2>
+		<p>&nbsp;&nbsp;&nbsp;装饰者模式是指不断的往对象中添加装饰。比如如果一块蛋糕，加上奶油就是奶油蛋糕，加上草莓就是草莓蛋糕等等。</p>
+		<p><img src="img/simple.png" alt="图片2" width="700" /></p>
+		<p>装饰者模式的关键点就在于总有一个不变的装饰物，以上是示例程序的类图:</p>
+		<p>
+		Display类:用于拓展装饰物<br>
+		StringDisplay类:具体装饰物实现<br>
+		Border类:装饰框，依赖Display类，用于添加到装饰物中。<br>
+		SideBorder类:具体的装饰框实现类，效果是"|装饰物|"<br>
+		FullBorder类:具体的装饰框实现类,效果添加上下边框添加"+---------+"<br>
+		</p>
+		<h2>代码实现</h2>
+		<h3>Display类</h3>
+		<p>public abstract class Display {<br>
+				&nbsp;&nbsp;public abstract int getColumns();//获取横向字符数<br>
+				&nbsp;&nbsp;public abstract int getRows();//获取纵向字符数<br>
+				&nbsp;&nbsp;public abstract String getRowText(int row);//获取第row行的字符串<br>
+				
+				&nbsp;&nbsp;public final void show(){<br>
+					&nbsp;&nbsp;for(int i=0;i<(getRows());i++){<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(getRowText(i));<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;}<br>
+			}<br>
+		</p>
+		<h3>StringDisplay类</h3>
+		<p>public class StringDisplay extends Display{//用于显示单个字符串<br>
+				&nbsp;&nbsp;private String string;//要显示的字符串<br>
+				&nbsp;&nbsp;public StringDisplay(String string){//通过参数传入要显示的字符串<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	this.string = string;<br>
+				&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;@Override<br>
+				&nbsp;&nbsp;public int getColumns() {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	return string.getBytes().length;//字符数<br>
+				&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;@Override<br>
+				&nbsp;&nbsp;public int getRows() {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	return 1;//行数是1<br>
+				&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;@Override<br>
+				&nbsp;&nbsp;public String getRowText(int row) {//只有当row为0时，返回值<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	if(row ==0)<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		return string;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	else <br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		return null;<br>
+				&nbsp;&nbsp;}<br>
+			}<br>
+		<h3>Border类</h3>
+		<p>
+		public abstract class Border extends Display{<br>
+			&nbsp;&nbsp;protected Display display;//表示被装饰物<br>
+			&nbsp;&nbsp;protected Border(Display display) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	this.display = display;//在生成实例时通过参数指定被装饰物<br>
+			&nbsp;&nbsp;}<br>
+		}<br>
+		</p>
+		<h3>SideBorder类</h3>
+		<p>public class SideBorder extends Border{<br>
+			&nbsp;&nbsp;private char borderChar;//表示装饰边框的字符<br>
+			&nbsp;&nbsp;public SideBorder(Display display,char ch){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	//通过构造函数指定Display和装饰边框字符		<br>								
+			&nbsp;&nbsp;&nbsp;&nbsp;	super(display);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	this.borderChar = ch;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public int getColumns() {//字符数为字符串字符加上俩侧边框字符数<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	return 1 + display.getColumns() + 1;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public int getRows() {//行数 即被装饰物的行数<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	return display.getRows();<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public String getRowText(int row) {//指定的那一行的字符数为被装饰物的字符串<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	return borderChar + display.getRowText(row) + borderChar;//加上俩侧的边框的字符<br>
+			&nbsp;&nbsp;}<br>
+			
+		}<br>
+		</p>
+		<h3>FullBorder类</h3>
+		<p>public class FullBorder extends Border{<br>
+				&nbsp;&nbsp;public FullBorder(Display display){<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	super(display);<br>
+				&nbsp;&nbsp;}<br>
+
+				&nbsp;&nbsp;@Override<br>
+				&nbsp;&nbsp;public int getColumns() {//字符数为被装饰物的字符数加上俩侧边框字符数<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	return 1 + display.getColumns() + 1;<br>
+				&nbsp;&nbsp;}<br>
+
+				&nbsp;&nbsp;@Override<br>
+				&nbsp;&nbsp;public int getRows() {//行数为被装饰物的行数加上上下边框的行数<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	return 1 + display.getRows() + 1;<br>
+				&nbsp;&nbsp;}<br>
+
+				&nbsp;&nbsp;@Override<br>
+				&nbsp;&nbsp;public String getRowText(int row) {//指定的那一行字符数<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	if(row == 0){//下边框<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		return "+" + makeLine('-',display.getColumns()) + "+";<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	}else if(row == display.getRows() +1){//上边框<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		return "+" + makeLine('-',display.getColumns()) + "+";<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	}else{//其他边框<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		return "|" + display.getRowText(row-1) +"|";<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	}<br>
+					
+				&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;private String makeLine(char ch,int count){//生成一个重复总行数的次字符ch的字符串<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	StringBuffer buf = new StringBuffer();<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	for(int i=0;i<(count);i++){<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		buf.append(ch);<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	}<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;	return buf.toString();<br>
+				&nbsp;&nbsp;}<br>
+				
+			}<br>
+
+		</p>
+		<h3>Main类</h3>
+		<p>public class Main {<br>
+
+			&nbsp;&nbsp;public static void main(String[] args) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	Display b1 = new StringDisplay("Hello,world.");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	Display b2 = new SideBorder(b1,'#');<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	Display b3 = new FullBorder(b2);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	b1.show();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	b2.show();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	b3.show();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	Display b4 = new SideBorder(<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	new FullBorder(<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		new FullBorder(<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		new SideBorder(<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		new FullBorder(<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		new StringDisplay("你好,世界.")), '*'))), '/');<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;	b4.show();<br>
+			&nbsp;&nbsp;}<br>
+
+		}<br>
+
+		</p>
+		<h3>运行结果</h3>
+		<p><img src="img/decorator.png" alt="图片3" width="700" /></p>
+		<p>注:装饰者模式相当于是在一个方法的参数通过匿名对象类的方式一层层的嵌套出来。</p>
+    <div class="keybq">
+	<p><span>关键字词</span>：设计模式、Decorator、装饰</p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>

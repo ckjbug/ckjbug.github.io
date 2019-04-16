@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2017-12-26</span>设计模式(一)————————prototype学习笔记</h4>
+		<h3>结构</h3>
+		<p>&nbsp;&nbsp;&nbsp;prototype模式是设计一个实例模板，以便于实例的复制。之后创建新的实例就不用再依赖于new关键字，实质是通过java中Cloneable接口中的clone方法创建实例的副本。</p>
+		<p><img src="img/simple.png" alt="图片1" width="700" /></p>
+		<p>说明:客户端程序(Manager)依赖于原型实例(Product),对象的实现(UderlinePen和MessageBox)也依赖于原型的。只要实现子类的createClone就能创建子类对象，不用再依赖于具体实现。</p>
+		<h3>Manager类</h3>
+		<p>public class Manager {<br>
+		&nbsp;&nbsp;private HashMap<Object, Object> showcase = new HashMap<>();<br>
+		&nbsp;&nbsp;public void register(String name,Product poto) {//注册对象<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;showcase.put(name, poto);<br>
+		&nbsp;&nbsp;}<br>
+		&nbsp;&nbsp;public Product create(String potoname) {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;Product p = (Product)showcase.get(potoname);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;return p.createClone();//返回 对应子类 对象的实例<br>
+		&nbsp;&nbsp;}<br>
+		}<br>
+</p>
+		<h3>Product类</h3>
+		<p>public interface Product extends Cloneable{<br>
+		   &nbsp;&nbsp;public abstract void use(String s);//实例的使用方法<br>
+		&nbsp;&nbsp;public abstract Product createClone();//生成副本方法<br>
+		}<br>
+		</p>
+		<h3>UderlinePen类</h3>
+		<p>public class UnderlinePen implements Product{<br>
+			&nbsp;&nbsp;private char ulchar;<br>
+			&nbsp;&nbsp;public UnderlinePen(char ulchar) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;this.ulchar = ulchar;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public void use(String s) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;int length = s.getBytes().length;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("\""+s+"\"");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.print("");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;for(int i=0;i<(length+4);i++) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(ulchar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("");<br>
+			&nbsp;&nbsp;}<br>
+
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public Product createClone() {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;Product p = null;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p=(Product)clone();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}catch (CloneNotSupportedException e) {<br>
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return p;<br>
+			&nbsp;&nbsp;}<br>
+			}<br></p>
+		<h3>MessageBox类</h3>
+		<p>public class MessageBox implements Product{<br>
+			&nbsp;&nbsp;private char decochar;<br>
+			&nbsp;&nbsp;public MessageBox(char decochar) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;this.decochar = decochar;<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public void use(String s) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;int length = s.getBytes().length;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;for(int i=0;i<=(length+4);i++) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(decochar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(" ");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(decochar+ " " + s + " " + decochar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;for(int i=0;i<(length+4);i++) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.print(decochar);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("");<br>
+			&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;@Override<br>
+			&nbsp;&nbsp;public Product createClone() {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;Product p = null;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;try {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p=(Product)clone();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}catch (CloneNotSupportedException e) {<br>
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return p;<br>
+			&nbsp;&nbsp;}<br>
+			}<br></p>
+		<h3>Main类</h3>
+		<p>public static void main(String[] args) {<br>
+			&nbsp;&nbsp;//准备<br>
+			&nbsp;&nbsp;Manager manager = new Manager();<br>
+			&nbsp;&nbsp;UnderlinePen upen = new UnderlinePen('~');<br>
+			&nbsp;&nbsp;MessageBox mbox = new MessageBox('*');<br>
+			&nbsp;&nbsp;MessageBox sbox = new MessageBox('/');<br>
+			&nbsp;&nbsp;manager.register("strong message", upen);//将对象和键id注册到manager中管理<br>
+			&nbsp;&nbsp;manager.register("warning box", mbox);<br>
+			&nbsp;&nbsp;manager.register("slash box", sbox);<br>
+			
+			&nbsp;&nbsp;//生成<br>
+			&nbsp;&nbsp;Product p1 = manager.create("strong message");//通过对应的key进行创建子类<br>
+			&nbsp;&nbsp;p1.use("1:Hello,word.");//实现子类的调用<br>
+			&nbsp;&nbsp;Product p2 = manager.create("warning box");<br>
+			&nbsp;&nbsp;p2.use("2:Hello,word.");<br>
+			&nbsp;&nbsp;Product p3 = manager.create("slash box");<br>
+			&nbsp;&nbsp;p3.use("3:Hello,word.");<br>
+		}<br></p>
+		<h3>输出结果</h3>
+		<p><img src="img/end.png" alt="图片2" ></img></p>
+		<p>如上，我们是通过在client中的对实例模板的register对方法进行注册后，通过create方法获取到实例子类的实现，得以创建出这个实例的"副本"，最后调用use方法调用自身的具体实现，实现复制的。这个模式的好处就是不用让我们频繁的通过new进行创建实例，而是通过clone方法实现此类的克隆。因为克隆一个原型就类似于实例化一个类。但是，这个模式的需要一个全局的掌控，这也是需要我们去探索去联系的。</p>
+    <div class="keybq">
+	<p><span>关键字词</span>：设计模式、prototype、克隆</p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>

@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>东宇个人博客 - 一个java小码农的博客网站</title>
+<meta name="keywords" content="个人博客,东宇个人博客,个人博客模板,东宇" />
+<meta name="description" content="东宇个人博客，是一个java码农的个人网站。" />
+<link href="../../../images/logo.ico" type=image/x-icon rel="shortcut icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../../../css/base.css" rel="stylesheet">
+<link href="../../../css/about.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="/skin/2017/js/modernizr.js"></script>
+<![endif]-->
+<script src="../../../js/scrollReveal.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo"  data-scroll-reveal="enter right over 1s">
+<a href="/"><img src="../../../images/logo.png"></a></div>
+  <nav class="topnav" >
+<a href="../../../home.html"><span>首页</span><span class="en">Home</span></a><a href="../../../about.html"><span>关于我</span><span class="en">About</span></a><a href="../../../manshenghuo.html"><span>慢生活</span><span class="en">Life</span></a><!--<a href="learn.html"><span>碎言碎语</span><span class="en">Doing</span></a>--><a href="../../../mbfx.html"><span>心情分享</span><span class="en">Share</span></a><a href="../../../learn.html"><span>学无止境</span><span class="en">Learn</span></a><a href="../../../gbook.html"><span>留言</span><span class="en">Saying</span></a>
+</nav>
+</header>
+<article>
+  <div class="container">
+   
+    <div class="about left">
+
+    <ul> 
+		<h4 class="atitle"><span>2018-1-8</span>设计模式(四)————————Composite模式学习笔记</h4>
+		<h2>结构</h2>
+		<p>&nbsp;&nbsp;&nbsp;组合模式是组合多个对象形成树形结构以表示具有“整体—部分”关系的层次结构。<br>
+		也能够使容器和内容保持一致性，创造出递归调用。以下类图:</p>
+		<p><img src="img/simple.png" alt="图片2" width="700" /></p>
+		<p>以下通过代码模拟组合模式的运用场景，不会真的在文件夹中生成代码，用于测试。</p>
+		<h2>代码实现</h2>
+		<h3>Entry类(共享类)</h3>
+		<p>
+		public abstract class Entry {<br>
+		&nbsp;&nbsp;	public abstract String getName();//获得名字<br>
+		&nbsp;&nbsp;	public abstract int getSize();//获得大小<br>
+		&nbsp;&nbsp;	public Entry add(Entry entry);<br>
+		&nbsp;&nbsp;	public void printList(){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		printList("");<br>
+		&nbsp;&nbsp;	}<br>
+			
+		&nbsp;&nbsp;	protected abstract void printList(String prefix);//为一览加上前缀并显示目录条目一览<br>
+		&nbsp;&nbsp;	public String toString(){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return getName() +"("+getSize()+")";<br>
+		&nbsp;&nbsp;	}<br>
+		}<br>
+		</p>
+		<h3>Directory类(文件夹类)</h3>
+		<p>
+		public class Directory extends Entry{<br>
+		&nbsp;&nbsp;	private String name;//文件夹名字<br>
+		&nbsp;&nbsp;	private ArrayList directory =new ArrayList<>();//文件夹中目录条目的集合<br>
+			
+		&nbsp;&nbsp;	public Directory(String name){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		this.name = name;<br>
+		&nbsp;&nbsp;	}<br>
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public String getName() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return name;<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public int getSize() {//获取大小 通过迭代器<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		int size = 0;<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Iterator it = directory.iterator();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		while(it.hasNext()){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Entry entry = (Entry)it.next();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			size += entry.getSize();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return size;
+		&nbsp;&nbsp;	}
+			
+		&nbsp;&nbsp;	public Entry add(Entry entry){//增加目录条目<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		directory.add(entry);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return this;<br>
+		&nbsp;&nbsp;	}<br>
+			
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	protected void printList(String prefix) {//增加目录条目一览<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println(prefix +"/"+ this);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Iterator it = directory.iterator();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		while(it.hasNext()){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			Entry entry = (Entry)it.next();<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			entry.printList(prefix+"/"+ name);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		}<br>
+		&nbsp;&nbsp;	}<br>
+		}<br>
+		</p>
+		<h3>File类(单独的文件类)</h3>
+		<p>
+		public class File extends Entry{<br>
+		&nbsp;&nbsp;	private String name;<br>
+		&nbsp;&nbsp;	private int size;<br>
+		&nbsp;&nbsp;	public File(String name,int size){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		this.name = name;<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		this.size = size;<br>
+		&nbsp;&nbsp;	}<br>
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public String getName() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return name;<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	public int getSize() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		return size;<br>
+		&nbsp;&nbsp;	}<br>
+
+		&nbsp;&nbsp;	@Override<br>
+		&nbsp;&nbsp;	protected void printList(String prefix) {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println(prefix +"/"+ this);//this 相当于 this.toString() 和 toString()<br>
+		&nbsp;&nbsp;	}<br>
+
+		}<br>
+		</p>
+		<h3>Main类(测试)</h3>
+		<p>
+		public class Main {<br>
+		&nbsp;&nbsp;	public static void main(String[] args){<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("目录创建中 ...");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory rootdir = new Directory("root");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory bindir = new Directory("bin");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory tmpdir = new Directory("tmp");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory userdir = new Directory("user");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.add(bindir);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.add(tmpdir);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.add(userdir);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		bindir.add(new File("vi",10000));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		bindir.add(new File("latex",20000));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.printList();<br>
+				
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		System.out.println("目录文件创建中 ...");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory yuki = new Directory("yuki");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory banako = new Directory("banako");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		Directory tomura = new Directory("tomura");<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		userdir.add(yuki);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		userdir.add(banako);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		userdir.add(tomura);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		yuki.add(new File("diary.html",100));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		yuki.add(new File("Composite.java",200));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		banako.add(new File("memo.text",300));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		tomura.add(new File("game.doc",400));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		tomura.add(new File("junk.mail",500));<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;		rootdir.printList();<br>
+		&nbsp;&nbsp;	}<br>
+		}<br>
+		</p>
+		<h3>运行结果</h3>
+		<p><img src="img/composite1.png" alt="图片3" width="700" /></p>
+		<p><img src="img/composite2.png" alt="图片4" width="700" /></p>
+		<p>组合模式解耦了客户程序与复杂元素内部结构，从而使客户程序可以像处理简单元素一样来处理复杂元素。上面例子文件和文件夹都执行相同的接口，这是组合模式的关键。通过执行相同的接口，就可以用相同的方式对待文件和文件夹，从而实现将文件或者文件夹储存为文件夹的子级元素。</p>
+    <div class="keybq">
+	<p><span>关键字词</span>：设计模式、Composite、文件、嵌套</p>    
+   
+<div class="gbko">
+<!--高速版-->
+<div id="SOHUCS" sid="789" ></div>
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOS85MTcw">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+</div>
+</div>
+
+</div>
+  </div>
+  </aside>
+</article>
+<footer> Design by DanceSmile <a href="/"></a> </footer>
+<script>
+	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+		(function(){
+			window.scrollReveal = new scrollReveal({reset: true});
+		})();
+	};
+</script><script src="/e/public/onclick/?enews=donews&classid=11&id=789"></script></body>
+</html>
