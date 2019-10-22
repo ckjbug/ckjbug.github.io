@@ -1,4 +1,4 @@
-# 自媒体资源汇总
+# 自媒体之路
 **免费、免版权、可商用**  
 
 
@@ -7,6 +7,7 @@
 </div>
 
 ------
+### 资源汇总
 
 ⌨ 图片
 
@@ -44,13 +45,66 @@
 | [Videvo](https://www.videvo.net/) | [PEXELS videos](https://www.pexels.com/videos/) | [Videezy](https://www.videezy.com/) | [Vidsplay](https://www.vidsplay.com/) | [OpenFootage](https://www.openfootage.net/) | [MotionPlaces](https://www.motionplaces.com/) | [Ignite Motion](http://www.ignitemotion.com/) | [Splasheo](http://www.splasheo.com/video-boosters) | [Wave.video](https://www.animatron.com/wave) | [Life of Vids](https://www.lifeofvids.com/) |
 | [Distill](http://www.wedistill.io/) | []() | []() | []() | []() | []() | []() | []() | []() | []() |
 
+<details>
+  <summary><b>类似汇总网站推荐</b></summary>
 
 
-类似汇总网站推荐：
 
 [AllTheFreeStock](https://allthefreestock.com/#)
 
+[60家免费版权图片网站](https://www.uisdc.com/60-free-image-galleries)
+
 [29个免费无版权视频网站](https://www.jianshu.com/p/ab4d3355e84e)
+
+[29个免费无版权视频网站](https://www.jianshu.com/p/ab4d3355e84e)
+
+**[⬆ Back to top](#自媒体之路)**
+
+</details>
+
+
+------------
+
+### 版权法律 ©
+
+- 图片侵权（图片版权、肖像权、字体等素材的版权、商标以及其他等）
+- 文字侵权（直接转载风险、洗稿风险、谣言风险、侵犯广告法等相关行业法规风险）
+- 视频侵权（版权、肖像权、字体等素材的版权、视频内容风险等）
+- 音乐侵权（配乐、背景音乐等）
+
+------------
+
+### 软件推荐
+
+- OBS录屏\直播软件
+- Wondershare Filmora万兴神剪手
+- 格式工厂
+- PS
+- PR
+- AE
+- AI
+- C4D
+- Procreate（Ipad App）
+
+
+------------
+
+#### 包装推广
+
+视频内容：
+- 每日挑战
+- 每日科普
+- 编程类图片、视频
+- 插画视频
+- 生产力空间
+
+
+视频风格：
+- VideoScribe
+- 白板
+- 图文
+- 动画
+- 录屏
 
 ------------
 
