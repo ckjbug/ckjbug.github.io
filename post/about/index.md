@@ -59,7 +59,7 @@
     
       
     
-      
+# aas 
     
       
     
@@ -82,7 +82,7 @@
             </div>
             
             <div class="post-content">
-              <p>[这是关于的页面，可以在这里向世界介绍你！](http://ckjbug.site)</p>
+              [这是关于的页面，可以在这里向世界介绍你！](http://ckjbug.site)
 
             </div>
           </article>
@@ -93,7 +93,7 @@
         
     
         <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">ckjbug</a>
+  Powered by <a href="https://github.com/ckjbug" target="_blank">ckjbug</a>
 </div>
 
 <script>
