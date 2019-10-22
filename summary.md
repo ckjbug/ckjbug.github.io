@@ -23,7 +23,7 @@
 
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/ckjbug/xiaokui/master/image/bloglogo.png"> 
+    <img src="https://raw.githubusercontent.com/ckjbug/Catalog/master/image/music1.png"> 
 </div>
 
 💻 音乐
@@ -34,7 +34,7 @@
 | [Otowabi](https://otowabi.com/) | []() | []() | []() | []() | []() | []() | []() | []() | []() |
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/ckjbug/xiaokui/master/image/%E7%A4%BE%E4%BA%A4%E7%BD%91%E7%AB%99logo.png"> 
+    <img src="https://raw.githubusercontent.com/ckjbug/Catalog/master/image/video1.png"> 
 </div>
 
 📱 视频
