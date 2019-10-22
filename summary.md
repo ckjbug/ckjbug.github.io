@@ -45,10 +45,12 @@
 | [Videvo](https://www.videvo.net/) | [PEXELS videos](https://www.pexels.com/videos/) | [Videezy](https://www.videezy.com/) | [Vidsplay](https://www.vidsplay.com/) | [OpenFootage](https://www.openfootage.net/) | [MotionPlaces](https://www.motionplaces.com/) | [Ignite Motion](http://www.ignitemotion.com/) | [Splasheo](http://www.splasheo.com/video-boosters) | [Wave.video](https://www.animatron.com/wave) | [Life of Vids](https://www.lifeofvids.com/) |
 | [Distill](http://www.wedistill.io/) | []() | []() | []() | []() | []() | []() | []() | []() | []() |
 
-<details>
-  <summary><b>类似汇总网站推荐</b></summary>
 
-[AllTheFreeStock](https://allthefreestock.com/#)
+
+<details>
+<summary><b>类似汇总网站推荐</b></summary>
+
+[AllTheFreeStock](https://allthefreestock.com/)
 
 [60家免费版权图片网站](https://www.uisdc.com/60-free-image-galleries)
 
@@ -61,7 +63,7 @@
 </details>
 
 
-------------
+![](https://raw.githubusercontent.com/ckjbug/xiaokui/master/split.png)
 
 ### 版权法律 ©
 
@@ -104,7 +106,7 @@
 - 动画
 - 录屏
 
-------------
+![](https://raw.githubusercontent.com/ckjbug/xiaokui/master/split.png)
 
 📱 关注
 
