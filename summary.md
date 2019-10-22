@@ -84,7 +84,7 @@
 - AE
 - AI
 - C4D
-- Procreate（Ipad App）
+- Procreate（Ipad）
 
 
 ------------
@@ -100,11 +100,11 @@
 
 
 视频风格：
-- VideoScribe
-- 白板
-- 图文
-- 动画
-- 录屏
+- VideoScribe（用这款创意手绘视频软件进行制作）
+- 白板（简单的画图工具，平板或Windows画图软件都可以）
+- 图文（图片视频 + 文字）
+- 动画（用AE做一些简单的动画视频）
+- 录屏（Windows网页录屏技巧：F11全屏->Ctrl + Shift + 点击待跳转网页的链接->进入点击后的页面->Ctrl + 1 回到当前浏览器的第一个网页，Ctrl + 3就是跳到第三个网页上）
 
 ![](https://raw.githubusercontent.com/ckjbug/xiaokui/master/split.png)
 
