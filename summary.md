@@ -48,7 +48,7 @@
 
 
 <details>
-<summary><b>类似汇总网站推荐</b></summary>
+    <summary><b>类似汇总网站推荐</b></summary>
 
 [AllTheFreeStock](https://allthefreestock.com/)
 
@@ -71,6 +71,8 @@
 - 文字侵权（直接转载风险、洗稿风险、谣言风险、侵犯广告法等相关行业法规风险）
 - 视频侵权（版权、肖像权、字体等素材的版权、视频内容风险等）
 - 音乐侵权（配乐、背景音乐等）
+
+![](https://raw.githubusercontent.com/ckjbug/Catalog/master/image/%E7%9F%A5%E8%AF%86%E5%85%B1%E4%BA%AB.png)
 
 ------------
 
