@@ -1,96 +1,402 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-	<meta charset="UTF-8">
-	<title>ckjbug</title>
-	<style>
-* {
-	margin: 0;
-	padding: 0;
-}
-body {
-	overflow: hidden;
-}
-		/*canvas{ background: #0c0c0c; }*/
-</style>
-	</head>
-	<body>
-<canvas id="canvas"  style="width:100%;height:100%;"> 您的浏览器不支持canvas标签，请您更换浏览器 </canvas>
-<script>
-		var canvas=document.getElementById("canvas");
-		canvas.onclick=function (){
-			window.location="home.html";
-		}
-		var can=canvas.getContext("2d");
-		var s=window.screen;//获取屏幕
-		var w=canvas.width=s.width;//获取屏幕宽度
-		var h=canvas.height=s.height;//获取屏幕高度
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重庆-川西7日新能源自驾游攻略</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            color: white;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        
+        .card-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .card h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h3 i {
+            margin-right: 10px;
+            color: #fdbb2d;
+        }
+        
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .map-container {
+            margin: 40px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            height: 500px;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .charger-stations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .charger-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .charger-card h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .charger-card h3 i {
+            color: #4CAF50;
+            margin-right: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .day-selector {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .day-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .day-btn.active, .day-btn:hover {
+            background: white;
+            color: #1a2a6c;
+        }
+        
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-route"></i> 重庆-川西7日新能源自驾游</h1>
+            <p class="subtitle">穿越318国道 · 探索川西秘境 · 新能源无忧出行</p>
+        </header>
+        
+        <div class="day-selector">
+            <button class="day-btn active" data-day="1">Day 1</button>
+            <button class="day-btn" data-day="2">Day 2</button>
+            <button class="day-btn" data-day="3">Day 3</button>
+            <button class="day-btn" data-day="4">Day 4</button>
+            <button class="day-btn" data-day="5">Day 5</button>
+            <button class="day-btn" data-day="6">Day 6</button>
+            <button class="day-btn" data-day="7">Day 7</button>
+        </div>
+        
+        <div class="card-container">
+            <!-- 卡片会自动通过JS生成 -->
+        </div>
+        
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+        
+        <h2 style="color: white; text-align: center; margin: 30px 0;"><i class="fas fa-charging-station"></i> 充电站规划</h2>
+        <div class="charger-stations">
+            <!-- 充电站信息会自动通过JS生成 -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>新能源川西自驾攻略 © 2023 | 车辆续航：400公里 | 总里程：约1800公里</p>
+    </footer>
 
-		can.fillStyle=color2();
+    <!-- 高德地图API -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=c29f93ac9e59fd1b83346d119b33952c"></script>
+    <script>
+        // 行程数据
+        const itinerary = [
+            {
+                day: 1,
+                title: "重庆 - 雅安",
+                distance: "320公里",
+                image: "https://p6.itc.cn/q_70/images01/20231128/5c0f1e774f7d48989050271a3549195d.jpeg",
+                desc: "从重庆市区出发，经成渝高速前往雅安，抵达后参观熊猫基地。",
+                points: [
+                    {name: "重庆出发", lng: 106.551643, lat: 29.562849},
+                    {name: "雅安熊猫基地", lng: 102.980469, lat: 29.984929}
+                ]
+            },
+            {
+                day: 2,
+                title: "雅安 - 康定",
+                distance: "180公里",
+                image: "https://appimages.scpublic.cn/files/2024092516051893.jpg",
+                desc: "沿318国道前往康定，途中欣赏二郎山风光，抵达后体验藏族文化。",
+                points: [
+                    {name: "雅安", lng: 102.980469, lat: 29.984929},
+                    {name: "康定", lng: 101.96254, lat: 30.049698}
+                ]
+            },
+            {
+                day: 3,
+                title: "康定 - 新都桥",
+                distance: "120公里",
+                image: "https://pic.rmb.bdstatic.com/bjh/240125/dump/267deb4ea4742ec54172b98eafbea69f.jpeg?x-bce-process=image/crop,w_1198,h_799,x_24,y_0",
+                desc: "翻越折多山，抵达摄影天堂新都桥，拍摄藏式民居和草原风光。",
+                points: [
+                    {name: "康定", lng: 101.96254, lat: 30.049698},
+                    {name: "新都桥", lng: 101.48634, lat: 30.038835}
+                ]
+            },
+            {
+                day: 4,
+                title: "新都桥 - 理塘",
+                distance: "200公里",
+                image: "https://1257041421.vod2.myqcloud.com/c78bef1dvodcq1257041421/07ef041d5285890803865595873/5285890803865595874.jpg",
+                desc: "穿越卡子拉山，抵达世界高城理塘，参观长青春科尔寺。",
+                points: [
+                    {name: "新都桥", lng: 101.48634, lat: 30.038835},
+                    {name: "理塘", lng: 100.269817, lat: 29.991807}
+                ]
+            },
+            {
+                day: 5,
+                title: "理塘 - 稻城亚丁",
+                distance: "220公里",
+                image: "https://pic.rmb.bdstatic.com/bjh/down/a5eb27bfd6dde5160b0938483614f24f.jpeg",
+                desc: "前往稻城亚丁，沿途欣赏海子山古冰帽遗迹，准备次日亚丁景区游览。",
+                points: [
+                    {name: "理塘", lng: 100.269817, lat: 29.991807},
+                    {name: "稻城亚丁", lng: 100.297459, lat: 28.436618}
+                ]
+            },
+            {
+                day: 6,
+                title: "亚丁景区游览",
+                distance: "景区游览",
+                image: "https://copyright.bdstatic.com/vcg/creative/1ea0cf22bd1bb8097454d6ae050276c7.jpg@h_1280",
+                desc: "全天游览亚丁景区：冲古寺、洛绒牛场、牛奶海、五色海。",
+                points: [
+                    {name: "亚丁游客中心", lng: 100.297459, lat: 28.436618},
+                    {name: "洛绒牛场", lng: 100.336998, lat: 28.405983}
+                ]
+            },
+            {
+                day: 7,
+                title: "稻城 - 重庆",
+                distance: "约800公里",
+                image: "https://pic.rmb.bdstatic.com/bjh/3ea61486a58/240802/c28c8d895fd724b46c7b0fa47e411ada.jpeg",
+                desc: "经雅康高速返回重庆，途中根据电量情况在雅安或泸定充电。",
+                points: [
+                    {name: "稻城", lng: 100.297459, lat: 28.436618},
+                    {name: "重庆", lng: 106.551643, lat: 29.562849}
+                ]
+            }
+        ];
 
-		var words = Array(256).join("1").split("");
-		//设置一个包含256个空元素的数组，join("1")用来把数组里的元素拼接成字符串，split("")过滤掉数组里的空元素
+        // 充电站数据
+        const chargers = [
+            { name: "雅安特斯拉超充站", location: "雅安市雨城区", distance: "距路线1.5km", type: "快充" },
+            { name: "康定新能源充电中心", location: "康定市新城", distance: "距路线800m", type: "快充" },
+            { name: "理塘充电驿站", location: "理塘县G318旁", distance: "路线旁", type: "快充+慢充" },
+            { name: "稻城亚丁充电站", location: "稻城县香格里拉镇", distance: "距酒店500m", type: "快充" }
+        ];
 
-		setInterval(draw,50);
-		
+        // 初始化地图
+        const map = new AMap.Map('map', {
+            zoom: 7,
+            center: [102.980469, 29.984929],  // 雅安位置
+            viewMode: '3D'
+        });
 
+        // 添加路线
+        const path = [
+            [106.551643, 29.562849],   // 重庆
+            [102.980469, 29.984929],   // 雅安
+            [101.96254, 30.049698],    // 康定
+            [101.48634, 30.038835],    // 新都桥
+            [100.269817, 29.991807],   // 理塘
+            [100.297459, 28.436618],   // 稻城亚丁
+            [106.551643, 29.562849]    // 返回重庆
+        ];
 
-		// can.font="30px 微软雅黑"; //只设置一个不生效，一定要两个属性都设
-		// //绘制实心的文本：绘制的文本，文本的坐标x，文本的坐标y
-		// can.fillText("黑客帝国",100,100);
-		// // setInterval(draw,50);
+        const polyline = new AMap.Polyline({
+            path: path,
+            isOutline: true,
+            outlineColor: '#ffeeff',
+            borderWeight: 1,
+            strokeColor: "#1a2a6c",
+            strokeOpacity: 0.8,
+            strokeWeight: 6,
+            strokeStyle: "solid",
+            lineJoin: 'round',
+            zIndex: 50
+        });
+        map.add(polyline);
 
+        // 添加标记点
+        const markers = [];
+        itinerary.forEach(day => {
+            day.points.forEach(point => {
+                const marker = new AMap.Marker({
+                    position: [point.lng, point.lat],
+                    title: point.name,
+                    content: `<div style="background:white;padding:5px;border-radius:4px;">${point.name}</div>`
+                });
+                markers.push(marker);
+            });
+        });
+        map.add(markers);
 
+        // 渲染行程卡片
+        function renderCards(day) {
+            const cardContainer = document.querySelector('.card-container');
+            cardContainer.innerHTML = '';
+            
+            const dayData = itinerary.find(d => d.day === day);
+            if (dayData) {
+                const cardHTML = `
+                    <div class="card">
+                        <img src="${dayData.image}" alt="${dayData.title}" class="card-img">
+                        <div class="card-content">
+                            <h3><i class="fas fa-calendar-day"></i> ${dayData.title}</h3>
+                            <p><strong>里程：</strong>${dayData.distance}</p>
+                            <p>${dayData.desc}</p>
+                            <p><span class="highlight"><i class="fas fa-bolt"></i> 充电建议：</span>${day === 1 ? '出发前满电，雅安充电' : day === 7 ? '返程前在稻城充满电' : '抵达后充电'}</p>
+                        </div>
+                    </div>
+                `;
+                cardContainer.innerHTML = cardHTML;
+            }
+        }
 
-		function draw(){
-			//can.fillRect()画一个实心矩形:坐标x，坐标y，矩形宽，举行高
-			can.fillStyle='rgba(0,0,0,0.05)';
-			can.fillRect(0,0,w,h);
-			can.fillStyle=color2();
-			words.map(function(y,n){
-				text=String.fromCharCode(Math.ceil(65+Math.random()*57)); //转换为键盘上值
-				x = n*10;
-				can.fillText(text,x,y)
-				words[n]=( y > 758 + Math.random()*484 ? 0:y+10 );
-			});//数组元素的一个映射
-		}
+        // 渲染充电站
+        function renderChargers() {
+            const chargerContainer = document.querySelector('.charger-stations');
+            chargerContainer.innerHTML = '';
+            
+            chargers.forEach(station => {
+                const chargerHTML = `
+                    <div class="charger-card">
+                        <h3><i class="fas fa-plug"></i> ${station.name}</h3>
+                        <p><strong>位置：</strong>${station.location}</p>
+                        <p><strong>距离：</strong>${station.distance}</p>
+                        <p><strong>类型：</strong>${station.type}</p>
+                    </div>
+                `;
+                chargerContainer.innerHTML += chargerHTML;
+            });
+        }
 
-		//获取随机颜色，三种方法
-		function color1(){
-			var colors=[0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'];
-			var color="";
-			for( var i=0; i<6; i++){
-				//Math.random()产生一个0-1之间的小数
-				var n=Math.ceil(Math.random()*15);
-				color += "" + colors[n];
-				// console.log(color);
-			}
-			return '#'+color;
-		}
-
-		function color2(){
-			var color = Math.ceil(Math.random()*16777215).toString(16); 
-			// for( var i=color.length; i<6; i++ ){
-			// 	color = '0'+color;
-			// }
-			while(color.length<6){
-				color = '0'+color;
-			}
-			return '#'+color;
-		}
-
-		function color3(){
-			return "#" + (function(color){
-				return new Array(7-color.length).join("0")+color;
-				//神奇的方法，总共字符串有6位，如果只产生了3位，则前面应该补三个0，在长度为7-3=4的空数组中利用join插入0，则为['',0,'',0,'',0,''],刚好三个0补在前面
-			})((Math.random()*0x1000000 << 0).toString(16))
-			// << 0 也是一种取整的方法
-		}
-
-
-
-
-
-	</script>
+        // 初始化页面
+        window.onload = function() {
+            renderCards(1);
+            renderChargers();
+            
+            // 日期选择器事件
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    renderCards(parseInt(this.dataset.day));
+                });
+            });
+        };
+    </script>
 </body>
 </html>
