@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>&#24180;&#24230;&#26102;&#38388;&#33329;</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="visual" aria-label="&#24180;&#24230;&#36827;&#24230;">
+        <div class="visual-metrics">
+          <div>
+            <span>&#24180;&#20221;</span>
+            <strong id="heroYear">----</strong>
+          </div>
+          <div>
+            <span>&#24050;&#36807;</span>
+            <strong><em id="heroDay">--</em>/<em id="heroTotal">--</em></strong>
+          </div>
+          <div>
+            <span>&#36827;&#24230;</span>
+            <strong id="heroPercent">--%</strong>
+          </div>
+        </div>
+        <div class="year-dots" id="yearDots" aria-hidden="true"></div>
+        <div class="scanline"></div>
+      </section>
+
+      <section class="panel">
+        <div class="topbar">
+          <span class="status-dot"></span>
+          <span>&#20114;&#32852;&#32593;&#26102;&#38388;&#21516;&#27493;</span>
+        </div>
+
+        <blockquote>
+          <p id="quote">&#27491;&#22312;&#33719;&#21462;&#20013;&#25991;&#21517;&#35328;...</p>
+          <cite id="author"></cite>
+        </blockquote>
+
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date-row">
+          <span id="date">----&#24180;--&#26376;--&#26085;</span>
+          <span id="timezone">&#21516;&#27493;&#20013;</span>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span id="yearLabel">&#24180;&#24230; ----</span>
+            <strong id="percent">--%</strong>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div>
+            <span id="dayOfYear">--</span>
+            <small>&#20170;&#24180;&#24050;&#36807;&#22825;&#25968;</small>
+          </div>
+          <div>
+            <span id="daysTotal">--</span>
+            <small>&#20840;&#24180;&#24635;&#22825;&#25968;</small>
+          </div>
+          <div>
+            <span id="daysRemaining">--</span>
+            <small>&#20170;&#24180;&#21097;&#20313;&#22825;&#25968;</small>
+          </div>
+        </div>
+
+        <div class="source" id="source">&#25968;&#25454;&#28304;&#36830;&#25509;&#20013;...</div>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
